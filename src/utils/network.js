@@ -1,7 +1,7 @@
 
-export const getApiResource = async (url) => {
+export const getApiResource = async (picture) => {
     try {
-        const res = await fetch(url);
+        const res = await fetch(picture);
 
         if (!res.ok) {
             console.error('Could not fetch.', res.status);

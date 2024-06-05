@@ -11,14 +11,14 @@ const ProductsPage = () => {
     // const people = arr[0];
     // const setPeople = arr[1];
 
-    const getResourse = async (url) => {
-        const res = await getApiResource(url);
+    const getResourse = async (picture) => {
+        const res = await getApiResource(picture);
         
         if (res && Array.isArray(res)) {
-            const productsList = res.map(({ title, url }) => {
+            const productsList = res.map(({ title, picture }) => {
                 return {
                     title,
-                    url
+                    picture
                 }
             })
             console.log(productsList);
@@ -38,7 +38,7 @@ const ProductsPage = () => {
         <>
             {products && (
                 <ul>
-                    {products.map(({ title, url }) => 
+                    {products.map(({ title, picture }) => 
                         <li key={title}>{title}</li>
                     )}
                 </ul>
