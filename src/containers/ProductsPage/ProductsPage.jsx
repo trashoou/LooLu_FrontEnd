@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getApiResource } from '../../utils/network';
 import { API_PRODUCTS } from '../../constants/api'
+import { getProductsId } from '../../services/getProductsData';
+import ProductsList from '../../components/ProductsPage/ProductsList';
 
 import styles from './ProductsPage.module.css';
 
@@ -16,6 +18,10 @@ const ProductsPage = () => {
         
         if (res && Array.isArray(res)) {
             const productsList = res.map(({ title, picture }) => {
+
+                const id = getProductsId(picture);
+                console.log(id);
+
                 return {
                     title,
                     picture
@@ -36,14 +42,7 @@ const ProductsPage = () => {
 
     return (
         <>
-            {products && (
-                <ul>
-                    {products.map(({ title, picture }) => 
-                        <li key={title}>{title}</li>
-                    )}
-                </ul>
-            )}
-            
+            {products && <ProductsList products={products} />}
         </>
     )
 }
