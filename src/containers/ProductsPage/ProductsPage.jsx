@@ -45,7 +45,7 @@ const ProductsPage = ({setErrorApi}) => {
 
     return (
         <>
-            <h1>Navigation</h1>
+            <h1 className='header__text'>Products Page</h1>
             {products && <ProductsList products={products} />}
         </>
     )

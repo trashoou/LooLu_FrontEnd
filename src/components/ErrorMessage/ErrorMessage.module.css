@@ -6,8 +6,8 @@
     font-size: var(--font-size-header);
     text-align: center;
     text-shadow: 0 0 2px var(--color-white);
-    color: var(--color-white-green);
-    -webkit-text-stroke-color: var(--color-white-green);
+    color: var(--color-green-light);
+    -webkit-text-stroke-color: var(--color-green-light);
     -webkit-text-stroke-width: .5px;
     -webkit-text-stroke-color: transparent;
 }
