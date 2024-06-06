@@ -1,22 +1,24 @@
 import { useState, useEffect } from 'react';
-import { getApiResource } from '../../utils/network';
-import { API_PRODUCTS } from '../../constants/api'
-import { getProductsId } from '../../services/getProductsData';
-import ProductsList from '../../components/ProductsPage/ProductsList';
+import PropTypes from 'prop-types'; // ES6
+
+import { withErrorApi } from '@hoc-helpers/withErrorApi';
+import ProductsList from '@components/ProductsPage/ProductsList';
+import { getApiResource } from '@utils/network';
+import { getProductsId } from '@services/getProductsData';
+import { API_PRODUCTS } from '@constants/api'
+
+
 
 import styles from './ProductsPage.module.css';
 
-const ProductsPage = () => {
+const ProductsPage = ({setErrorApi}) => {
     const [products, setProducts] = useState(null);
-
-    // const arr = useState(null);
-    // const people = arr[0];
-    // const setPeople = arr[1];
+    
 
     const getResourse = async (picture) => {
         const res = await getApiResource(picture);
         
-        if (res && Array.isArray(res)) {
+        if (res) {
             const productsList = res.map(({ title, picture }) => {
 
                 const id = getProductsId(picture);
@@ -27,10 +29,11 @@ const ProductsPage = () => {
                     picture
                 }
             })
-            console.log(productsList);
+
             setProducts(productsList);
+            setErrorApi(false);
         } else {
-            console.error('Response is undefined or not an array:', res);
+            setErrorApi(true);
         }
         
         
@@ -42,9 +45,14 @@ const ProductsPage = () => {
 
     return (
         <>
+            <h1>Navigation</h1>
             {products && <ProductsList products={products} />}
         </>
     )
 }
 
-export default ProductsPage;
+ProductsPage.propTypes = {
+    setErrorApi: PropTypes.func
+}
+
+export default withErrorApi(ProductsPage);

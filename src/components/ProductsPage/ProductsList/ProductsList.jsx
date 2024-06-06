@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'; // ES6
 import styles from './ProductsList.module.css';
 
 const ProductsList = ({ products }) => {
@@ -13,6 +14,10 @@ const ProductsList = ({ products }) => {
             )}
         </ul>
     )
+}
+
+ProductsList.propTypes = {
+    products: PropTypes.array
 }
 
 export default ProductsList;

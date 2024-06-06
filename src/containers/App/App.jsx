@@ -1,4 +1,4 @@
-import ProductsPage from '../ProductsPage';
+import ProductsPage from '@containers/ProductsPage';
 
 import styles from './App.module.css';
 
