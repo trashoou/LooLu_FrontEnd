@@ -1,6 +1,6 @@
 import styles from './ErrorMessage.module.css';
 import icon from '../image/Loolu_big.webp';
-import LoadSpinner from '../LoadSpinner/LoadSpinner';
+//import LoadSpinner from '../LoadSpinner/LoadSpinner';
 
 const ErrorMessage = () => {
     return (
