@@ -4,7 +4,7 @@ import { BASE_URL } from '../../utils/constants';
 
 
 export const getCategories = createAsyncThunk(
-    'products/getCategories',
+    'categories/getCategories',
     async (_, thunkApi) => {
         try {
             const res = await axios(`${BASE_URL}/categories`);

@@ -5,7 +5,9 @@ import AppRoutes from '../Routes/Routes';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Sidebar from '../Sidebar/Sidebar';
+
 import { getCategories } from '../../features/categories/categoriesSlice';
+import { getProducts } from '../../features/products/productsSlice';
 
 
 const App = () => {
@@ -13,6 +15,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getCategories());
+    dispatch(getProducts());
   }, [dispatch]);
 
   return (
