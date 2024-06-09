@@ -7,7 +7,7 @@ export const getCategories = createAsyncThunk(
     'products/getCategories',
     async (_, thunkApi) => {
         try {
-            const res = await axios(`${BASE_URL}/products`);
+            const res = await axios(`${BASE_URL}/categories`);
             return res.data;
         } catch(err) {
             console.log(err);
@@ -26,7 +26,7 @@ const categoriesSlice = createSlice({
         builder.addCase(getCategories.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(getCategories.fulfilled, (state, payload) => {
+        builder.addCase(getCategories.fulfilled, (state, { payload }) => {
             state.list = payload;
             state.isLoading = false;
         });
