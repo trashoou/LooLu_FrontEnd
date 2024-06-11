@@ -16,7 +16,7 @@ const UserForm = () => {
     <>
       <div
         className={styles.overlay}
-        onCLick={closeForm}
+        onClick={closeForm}
       />
       <UserSignupForm closeForm={closeForm}/>
     </>

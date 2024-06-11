@@ -8,7 +8,8 @@ import Sidebar from '../Sidebar/Sidebar';
 
 import { getCategories } from '../../features/categories/categoriesSlice';
 import { getProducts } from '../../features/products/productsSlice';
-import UserForm from "../User/UserForm";
+import UserForm from '../User/UserForm'
+
 
 
 

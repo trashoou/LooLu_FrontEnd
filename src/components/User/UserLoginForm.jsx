@@ -7,11 +7,8 @@ import styles from "../../styles/User.module.css";
 const UserSignupForm = ({ toggleCurrentFormType, closeForm }) => {
   const dispatch = useDispatch();
   const [values, setValues] = useState({
-    firstName: "",
-    lastName: "",
     email: "",
     password: "",
-    username: "",
   });
 
   const handleChange = ({ target: { value, name } }) => {
@@ -40,29 +37,6 @@ const UserSignupForm = ({ toggleCurrentFormType, closeForm }) => {
       <div className={styles.title}>Sign Up</div>
 
       <form className={styles.form} onSubmit={handleSubmit}>
-        <div className={styles.group}>
-          <input
-            type="firstName"
-            placeholder="Your firstName"
-            name="firstName"
-            value={values.firstName}
-            autoComplete="off"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className={styles.group}>
-          <input
-            type="lastName"
-            placeholder="Your lastName"
-            name="lastName"
-            value={values.lastName}
-            autoComplete="off"
-            onChange={handleChange}
-            required
-          />
-        </div>
 
         <div className={styles.group}>
           <input
@@ -88,27 +62,16 @@ const UserSignupForm = ({ toggleCurrentFormType, closeForm }) => {
           />
         </div>
 
-        <div className={styles.group}>
-          <input
-            type="username"
-            placeholder="Your username"
-            name="username"
-            value={values.username}
-            autoComplete="off"
-            onChange={handleChange}
-            required
-          />
-        </div>
 
         <div
           className={styles.link}
           onClick={() => toggleCurrentFormType("login")}
         >
-          I already have an account
+          Create an account
         </div>
 
         <button type="submit" className={styles.submit}>
-          Create an account
+          Login
         </button>
       </form>
     </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,7 +15,15 @@ const Header = () => {
     const dispatch = useDispatch();
     const { currentUser } = useSelector(({ user }) => user);
 
-    const handleCLick = () => {
+    const [values, setValues] = useState({ username: "Guest"}) //, avatar: AVATAR
+
+    useEffect(() => {
+        if (!currentUser) return;
+
+        setValues(currentUser);
+    }, [currentUser])
+
+    const handleClick = () => {
         if(!currentUser) dispatch(toggleForm(true));
     };
 
@@ -28,12 +36,12 @@ const Header = () => {
             </div>
 
             <div className={styles.info}>
-                <div className={styles.user} onClick={handleCLick}>
+                <div className={styles.user} onClick={handleClick}>
                     <div 
                         className={styles.avatar} 
                         style={{ backgroundImage: `url(${AVATAR})`}}
                     />
-                            <div className={styles.username}>Guest</div>
+                            <div className={styles.username}>{values.username}</div>
                 </div>
 
                 <form className={styles.form}>
