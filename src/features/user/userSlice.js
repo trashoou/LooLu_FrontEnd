@@ -35,6 +35,7 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+
 export const updateUser = createAsyncThunk(
   "users/updateUser",
   async (payload, thunkAPI) => {

@@ -9,24 +9,24 @@ import { filterByPrice } from "../../features/products/productsSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { 
-    products: {list, filtered}, 
-    categories, 
+  const {
+    products: { list, filtered },
+    categories,
   } = useSelector((state) => state);
 
   useEffect(() => {
-    if(!list.length) return;
-    
-    dispatch(filterByPrice(100))
-  }, [dispatch, list.length])
+    if (!list.length) return;
+
+    dispatch(filterByPrice(100));
+  }, [dispatch, list.length]);
 
   return (
     <>
       <Poster />
-      <Products products={list} amount={20} title="Trending"/>
-      <Categories products={categories.list} amount={5} title="Worth seeing"/>
+      <Products products={list} amount={20} title="Trending" />
+      <Categories products={categories.list} amount={5} title="Worth seeing" />
       <Banner />
-      <Products products={filtered} amount={5} title="Less than 100$"/>
+      <Products products={filtered} amount={5} title="Less than 100$" />
     </>
   );
 };

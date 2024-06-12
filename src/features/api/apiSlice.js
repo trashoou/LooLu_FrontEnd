@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../../utils/constants";
 
+
 export const apiSLice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
@@ -10,7 +11,23 @@ export const apiSLice = createApi({
       query: ({ id }) => `/products/${id}`,
       providesTags: ["Product"],
     }),
+    getProducts: builder.query({
+      query: ({ params = {} }) => buildUrl("/products", params),
+      providesTags: ["Products"],
+    }),
   }),
 });
 
-export const { useGetProductQuery } = apiSLice;
+export const { useGetProductQuery, useGetProductsQuery } = apiSLice;
+
+const buildUrl = (url, params) => {
+  let urlWithParams = url;
+
+  Object.entries(params).forEach(([key, value], i) => {
+    const sign = !i ? "?" : "&";
+    urlWithParams += `${sign}${key}=${value}`;
+  });
+  
+  console.log('Constructed URL:', urlWithParams);
+  return urlWithParams;
+};
