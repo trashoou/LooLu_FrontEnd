@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createUser } from "../../features/user/userSlice";
+import { loginUser } from "../../features/user/userSlice";
 
 import styles from "../../styles/User.module.css";
 
@@ -22,7 +22,7 @@ const UserSignupForm = ({ toggleCurrentFormType, closeForm }) => {
 
     if (!isNotEmpty) return;
 
-    dispatch(createUser(values));
+    dispatch(loginUser(values));
     closeForm();
   };
 
@@ -34,7 +34,7 @@ const UserSignupForm = ({ toggleCurrentFormType, closeForm }) => {
         </svg>
       </div>
 
-      <div className={styles.title}>Sign Up</div>
+      <div className={styles.title}>Log In</div>
 
       <form className={styles.form} onSubmit={handleSubmit}>
 
@@ -65,7 +65,7 @@ const UserSignupForm = ({ toggleCurrentFormType, closeForm }) => {
 
         <div
           className={styles.link}
-          onClick={() => toggleCurrentFormType("login")}
+          onClick={() => toggleCurrentFormType("signup")}
         >
           Create an account
         </div>

@@ -1,78 +1,99 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'; // Импортируем createAsyncThunk и createSlice из @reduxjs/toolkit
-import axios from "axios"; // Импортируем axios для выполнения HTTP-запросов
-import { BASE_URL } from '../../utils/constants'; // Импортируем BASE_URL из файла констант
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { BASE_URL } from "../../utils/constants";
 
-// Определяем асинхронное действие для создания пользователя
 export const createUser = createAsyncThunk(
-    'users/createUser', // Уникальный идентификатор для этого асинхронного действия
-    async (payload, thunkApi) => { // Асинхронная функция, которая принимает payload и thunkApi
-        try {
-            const res = await axios.post(`${BASE_URL}/users`, payload); // Отправляем POST-запрос для создания пользователя
-            return res.data; // Возвращаем данные ответа
-        } catch(err) {
-            console.log(err); // Логируем ошибку в консоль
-            return thunkApi.rejectWithValue(err); // Возвращаем ошибку через thunkApi
-        }
+  "users/createUser",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/users`, payload);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
     }
+  }
 );
 
 export const loginUser = createAsyncThunk(
-    'users/createUser', 
-    async (payload, thunkApi) => { 
-        try {
-            const res = await axios.post(`${BASE_URL}/auth/login`, payload); 
-            return res.data; 
-        } catch(err) {
-            console.log(err); 
-            return thunkApi.rejectWithValue(err); 
-        }
+  "users/loginUser",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/login`, payload);
+      const login = await axios(`${BASE_URL}/auth/profile`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${res.data.access_token}`,
+        },
+      });
+
+      return login.data;
+    } catch (err) {
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
     }
+  }
 );
 
-// Создаем слайс состояния для пользователя
+export const updateUser = createAsyncThunk(
+  "users/updateUser",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await axios.put(`${BASE_URL}/users/${payload.id}`, payload);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
+const addCurrentUser = (state, { payload }) => {
+  state.currentUser = payload;
+};
+
 const userSlice = createSlice({
-    name: 'user', // Имя слайса состояния
-    initialState: { // Начальное состояние
-        currentUser: null, // Текущий пользователь (изначально null)
-        cart: [], // Корзина (изначально пустой массив)
-        isLoading: false, // Индикатор загрузки (изначально false)
-        formType: "signup", // Тип формы (по умолчанию "signup")
-        showForm: false, // Показ формы (изначально false)
-    },
-    reducers: { // Обычные синхронные редьюсеры
-        addItemToCart: (state, { payload } ) => { // Редьюсер для добавления товара в корзину
-            let newCart = [...state.cart]; // Создаем копию текущей корзины
-            const found = state.cart.find(({id}) => id === payload.id) // Ищем товар в корзине по id
+  name: "user",
+  initialState: {
+    currentUser: null,
+    cart: [],
+    isLoading: false,
+    formType: "signup",
+    showForm: false,
+  },
+  reducers: {
+    addItemToCart: (state, { payload }) => {
+      let newCart = [...state.cart];
+      const found = state.cart.find(({ id }) => id === payload.id);
 
-            if(found) { // Если товар найден в корзине
-                newCart = newCart.map((item) => { // Обновляем количество товара
-                    return item.id === payload.id 
-                    ? { ...item, quantity: payload.quantity || item.quantity + 1} // Увеличиваем количество товара
-                    : item; // Оставляем остальные товары без изменений
-                });
-            } else newCart.push({ ...payload, quantity: 1}) // Если товар не найден, добавляем его в корзину с quantity 1
-
-            state.cart = newCart; // Обновляем состояние корзины
-        },
-        toggleForm: (state, { payload }) => { // Редьюсер для переключения показа формы
-            state.showForm = payload; // Обновляем состояние showForm
-        }
-    },
-    extraReducers: (builder) => { // Асинхронные редьюсеры
-        // builder.addCase(getCategories.pending, (state) => {
-        //     state.isLoading = true;
-        // });
-        builder.addCase(createUser.fulfilled, (state, { payload }) => { // Редьюсер для успешного создания пользователя
-            state.currentUser = payload; // Обновляем состояние текущего пользователя
+      if (found) {
+        newCart = newCart.map((item) => {
+          return item.id === payload.id
+            ? { ...item, quantity: payload.quantity || item.quantity + 1 }
+            : item;
         });
-        // builder.addCase(getCategories.rejected, (state) => {
-        //     state.isLoading = false;
-        // });
+      } else newCart.push({ ...payload, quantity: 1 });
+
+      state.cart = newCart;
     },
+    removeItemFromCart: (state, { payload }) => {
+      state.cart = state.cart.filter(({ id }) => id !== payload);
+    },
+    toggleForm: (state, { payload }) => {
+      state.showForm = payload;
+    },
+    toggleFormType: (state, { payload }) => {
+      state.formType = payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(createUser.fulfilled, addCurrentUser);
+    builder.addCase(loginUser.fulfilled, addCurrentUser);
+    builder.addCase(updateUser.fulfilled, addCurrentUser);
+  },
 });
 
-// Экспортируем действия для использования в компонентах
-export const { addItemToCart, toggleForm } = userSlice.actions;
+export const { addItemToCart, removeItemFromCart, toggleForm, toggleFormType } =
+  userSlice.actions;
 
-// Экспортируем редьюсер по умолчанию
 export default userSlice.reducer;
