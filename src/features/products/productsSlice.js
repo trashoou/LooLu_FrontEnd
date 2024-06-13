@@ -27,6 +27,12 @@ const productsSlice = createSlice({
         isLoading: false,
     },
     reducers: {
+        clearProducts(state) {
+            state.products = [];
+          },
+          setProducts(state, action) {
+            state.products = action.payload;
+          },
         filterByPrice: (state, { payload }) => {
             state.filtered = state.list.filter(({ price }) => price < payload);
         },
@@ -49,6 +55,6 @@ const productsSlice = createSlice({
     },
 });
 
-export const { filterByPrice, getRelatedProducts } = productsSlice.actions;
+export const { clearProducts, setProducts, filterByPrice, getRelatedProducts } = productsSlice.actions;
 
 export default productsSlice.reducer;

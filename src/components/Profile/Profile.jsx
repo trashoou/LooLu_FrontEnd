@@ -30,9 +30,11 @@ const Profile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const isNotEmpty = Object.values(values).every((val) => val);
-
-    if (!isNotEmpty) return;
+    // Проверка на заполнение всех обязательных полей
+    if (!values.firstName || !values.lastName || !values.email || !values.password || !values.username) {
+      alert("Please fill in all required fields.");
+      return;
+    }
 
     dispatch(updateUser(values));
   };
