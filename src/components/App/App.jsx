@@ -8,7 +8,8 @@ import Sidebar from '../Sidebar/Sidebar';
 
 import { getCategories } from '../../features/categories/categoriesSlice';
 import { getProducts } from '../../features/products/productsSlice';
-import UserForm from '../User/UserForm'
+import UserForm from '../User/UserForm';
+import { fetchUserProfile } from '../../features/user/userSlice';
 
 
 
@@ -19,6 +20,7 @@ const App = () => {
   useEffect(() => {
     dispatch(getCategories());
     dispatch(getProducts());
+    dispatch(fetchUserProfile());
   }, [dispatch]);
 
   return (

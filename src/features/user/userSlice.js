@@ -15,19 +15,54 @@ export const createUser = createAsyncThunk(
   }
 );
 
+export const fetchUserProfile = createAsyncThunk(
+  "users/fetchUserProfile",
+  async (_, thunkAPI) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) throw new Error("No access token found");
+
+      const profile = await axios.get(`${BASE_URL}/auth/profile`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      return profile.data;
+    } catch (err) {
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
+
 export const loginUser = createAsyncThunk(
   "users/loginUser",
   async (payload, thunkAPI) => {
     try {
-      const res = await axios.post(`${BASE_URL}/auth/login`, payload);
-      const login = await axios(`${BASE_URL}/auth/profile`, {
-        withCredentials: true,
+      // Запрос на логин
+      const loginResponse = await axios.post(`${BASE_URL}/auth/login`, payload, {
+        withCredentials: true, // Включение куков в запросе
+      });
+
+      // Извлечение токена доступа из ответа
+      const accessToken = loginResponse.data.access_token;
+
+      // Сохранение токена в localStorage
+      localStorage.setItem("accessToken", accessToken);
+
+      // Запрос на получение профиля
+      const profileResponse = await axios.get(`${BASE_URL}/auth/profile`, {
+        withCredentials: true, // Включение куков в запросе
         headers: {
-          Authorization: `Bearer ${res.data.access_token}`,
+          Authorization: `Bearer ${accessToken}`, // Использование токена в заголовке
         },
       });
 
-      return login.data;
+      // Возвращение данных профиля
+      return profileResponse.data;
     } catch (err) {
       console.log(err);
       return thunkAPI.rejectWithValue(err);
@@ -42,6 +77,34 @@ export const updateUser = createAsyncThunk(
     try {
       const res = await axios.put(`${BASE_URL}/users/${payload.id}`, payload);
       return res.data;
+    } catch (err) {
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "users/logoutUser",
+  async (_, thunkAPI) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) throw new Error("No access token found");
+
+      await axios(
+        `${BASE_URL}/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      localStorage.removeItem("accessToken");
+
+      return true;
     } catch (err) {
       console.log(err);
       return thunkAPI.rejectWithValue(err);
@@ -91,6 +154,10 @@ const userSlice = createSlice({
     builder.addCase(createUser.fulfilled, addCurrentUser);
     builder.addCase(loginUser.fulfilled, addCurrentUser);
     builder.addCase(updateUser.fulfilled, addCurrentUser);
+    builder.addCase(fetchUserProfile.fulfilled, addCurrentUser);
+    builder.addCase(logoutUser.fulfilled, (state) => {
+      state.currentUser = null;
+    });
   },
 });
 

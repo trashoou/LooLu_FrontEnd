@@ -19,7 +19,7 @@ const Header = () => {
 
   const { currentUser, cart } = useSelector(({ user }) => user);
 
-  const [values, setValues] = useState({ username: "Guest" }); //, avatar: AVATAR
+  const [values, setValues] = useState({ username: "Guest", avatarPath: AVATAR });
 
   const { data, isLoading } = useGetProductsQuery({
     params: { title: searchValue },
@@ -54,7 +54,7 @@ const Header = () => {
         <div className={styles.user} onClick={handleClick}>
           <div
             className={styles.avatar}
-            style={{ backgroundImage: `url(${AVATAR})` }}
+            style={{ backgroundImage: `url(${values.avatarPath})` }}
           />
           <div className={styles.username}>{values.username}</div>
         </div>
