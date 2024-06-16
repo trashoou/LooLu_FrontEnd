@@ -5,7 +5,8 @@ export const ROUTES = {
     CATEGORY: '/categories/:id',
     PRODUCT: '/products/:id',
     SETTINGS: '/settings',
-    ORDERS: '/orders'
+    ORDERS: '/orders',
+    ADMIN: '/admin',
 }
 
 

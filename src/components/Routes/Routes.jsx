@@ -9,6 +9,7 @@ import SingleCategory from '../Categories/SingleCategory';
 import Cart from '../Cart/Cart';
 import Settings from '../Settings/Settings';
 import Orders from '../Orders/Orders';
+import Admin from '../Admin/Admin';
 
 const AppRoutes = () => (
     <Routes>
@@ -18,7 +19,8 @@ const AppRoutes = () => (
         <Route path={ROUTES.CATEGORY} element={<SingleCategory/>} />
         <Route path={ROUTES.CART} element={<Cart/>} />        
         <Route path={ROUTES.SETTINGS} element={<Settings/>} />     
-        <Route path={ROUTES.ORDERS} element={<Orders/>} />     
+        <Route path={ROUTES.ORDERS} element={<Orders/>} />   
+        <Route path={ROUTES.ADMIN} element={<Admin/>} />   
 
     </Routes>
 );

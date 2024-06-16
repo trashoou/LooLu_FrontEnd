@@ -75,6 +75,7 @@ const Header = () => {
               <div className={styles.dropdowncontent}>
                 <p onClick={() => handleMenuClick(ROUTES.PROFILE)}>User Data</p>
                 <p onClick={() => handleMenuClick(ROUTES.ORDERS)}>Orders</p>
+                <p onClick={() => handleMenuClick(ROUTES.ADMIN)}>Admin Panel</p>
                 <p onClick={() => handleMenuClick(ROUTES.SETTINGS)}>Settings</p>
                 <p onClick={handleLogout}>Sign Out</p>
               </div>
