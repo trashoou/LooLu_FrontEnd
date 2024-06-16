@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addItemToCart,
@@ -12,12 +12,19 @@ const Cart = () => {
   const dispatch = useDispatch();
   const { cart } = useSelector(({ user }) => user);
 
+  const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
+
   const changeQuantity = (item, quantity) => {
     dispatch(addItemToCart({ ...item, quantity }));
   };
 
   const removeItem = (id) => {
     dispatch(removeItemFromCart(id));
+  };
+
+  const handleCheckout = () => {
+    // Здесь можно добавить логику для обработки оплаты и сохранения заказа
+    setIsPaymentSuccess(true);
   };
 
   return (
@@ -100,7 +107,15 @@ const Cart = () => {
               </span>
             </div>
 
-            <button className={styles.proceed}>Proceed to checkout</button>
+            {!isPaymentSuccess ? (
+              <button className={styles.proceed} onClick={handleCheckout}>
+                Proceed to checkout
+              </button>
+            ) : (
+              <div className={styles.successMessage}>
+                Payment successful! Your order has been placed.
+              </div>
+            )}
           </div>
         </>
       )}

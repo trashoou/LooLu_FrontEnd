@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser, updateUser } from "../../features/user/userSlice";
+import { updateUser } from "../../features/user/userSlice";
 
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
@@ -76,17 +76,14 @@ const Profile = () => {
     dispatch(updateUser(values));
   };
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-  };
-
+  
   return (
     <section className={styles.profile}>
       {!currentUser ? (
         <span>You need to log in</span>
       ) : (
         <>
-          <form className={styles.form} onSubmit={handleSubmit}>
+          <form className={styles.form} onSubmit={handleSubmit}> <div style={{ textAlign: "center" }}><h2>User Data</h2></div>
             <div className={styles.group}>
               <input
                 type="text"
@@ -165,12 +162,6 @@ const Profile = () => {
               Update
             </button>
           </form>
-
-          <div className={styles.center}>
-            <button onClick={handleLogout} className={styles.title}>
-              Logout
-            </button>
-          </div>
         </>
       )}
     </section>

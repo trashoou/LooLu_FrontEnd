@@ -8,10 +8,11 @@ import { ROUTES } from "../../utils/routes";
 
 import LOGO from "../../images/logo.png";
 import AVATAR from "../../images/avatar.jpg";
-import { toggleForm } from "../../features/user/userSlice";
+import { logoutUser, toggleForm } from "../../features/user/userSlice";
 import { useGetProductsQuery } from "../../features/api/apiSlice";
 
 const Header = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -25,38 +26,60 @@ const Header = () => {
     params: { title: searchValue },
   });
 
-  console.log(data);
-
   useEffect(() => {
     if (!currentUser) return;
-
     setValues(currentUser);
   }, [currentUser]);
-
-  const handleClick = () => {
-    if (!currentUser) dispatch(toggleForm(true));
-    else navigate(ROUTES.PROFILE);
-  };
 
   const handleSearch = ({ target: { value } }) => {
     setSearchValue(value);
   };
 
+  
+
+  const handleMenuClick = (route) => {
+    navigate(route);
+    setIsDropdownOpen(false); // Закрыть меню после навигации
+  };
+
+  const handleClick = () => {
+    if (!currentUser) {
+      dispatch(toggleForm(true));
+    } else {
+      setIsDropdownOpen(!isDropdownOpen);
+    }
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    setValues({ username: "Guest", avatarPath: AVATAR });
+  };
+
   return (
-    <div className={styles.Header}>
+    <div className={styles.Header} >
       <div className={styles.logo}>
         <Link to={ROUTES.HOME}>
           <img src={LOGO} alt="LooLu" />
         </Link>
       </div>
 
-      <div className={styles.info}>
+      <div className={styles.info} >
         <div className={styles.user} onClick={handleClick}>
           <div
             className={styles.avatar}
             style={{ backgroundImage: `url(${values.avatarPath})` }}
           />
           <div className={styles.username}>{values.username}</div>
+          <div className={`${styles.userdropdown} ${isDropdownOpen ? styles.show : ""}`} >
+            {isDropdownOpen && (
+              <div className={styles.dropdowncontent}>
+                <p onClick={() => handleMenuClick(ROUTES.PROFILE)}>User Data</p>
+                <p onClick={() => handleMenuClick(ROUTES.ORDERS)}>Orders</p>
+                <p onClick={() => handleMenuClick(ROUTES.SETTINGS)}>Settings</p>
+                <p onClick={handleLogout}>Sign Out</p>
+              </div>
+            )}
+          </div>
         </div>
 
         <form className={styles.form}>
@@ -114,7 +137,7 @@ const Header = () => {
             <svg className={styles["icon-cart"]}>
               <use xlinkHref={`${process.env.PUBLIC_URL}/sprite.svg#bag`} />
             </svg>
-            {!!cart.length && (<span className={styles.count}>{cart.length}</span>)}
+            {!!cart.length && <span className={styles.count}>{cart.length}</span>}
           </Link>
         </div>
       </div>
