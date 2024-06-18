@@ -18,13 +18,66 @@ export const getProducts = createAsyncThunk(
     }
 );
 
+export const postProduct = createAsyncThunk(
+    'products/postProduct',
+    async (productData, { rejectWithValue }) => {
+      try {
+        const response = await axios.post(`${BASE_URL}/products`, productData);
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  );
+
+export const deleteProduct = createAsyncThunk(
+    'products/deleteProduct',
+    async (id, thunkApi) => {
+        try {
+            const res = await axios.delete(`${BASE_URL}/products/${id}`);
+            return res.data;
+        } catch(err) {
+            console.log(err);
+            return thunkApi.rejectWithValue(err);
+        }
+    }
+);
+
+export const updateProduct = createAsyncThunk(
+    'products/updateProduct',
+    async (payload, thunkApi) => {
+        try {
+            const res = await axios.put(`${BASE_URL}/products/${payload.id}`, payload);
+            return res.data;
+        } catch(err) {
+            console.log(err);
+            return thunkApi.rejectWithValue(err);
+        }
+    }
+);
+
+export const getProductById = createAsyncThunk(
+    'products/getProductById',
+    async (id, thunkApi) => {
+        try {
+            const res = await axios(`${BASE_URL}/products/${id}`);
+            return res.data;
+        } catch(err) {
+            console.log(err);
+            return thunkApi.rejectWithValue(err);
+        }
+    }
+);
+
 const productsSlice = createSlice({
     name: 'products',
     initialState: {
         list: [],
+        productDetails: null,
         filtered: [],
         related: [],
         isLoading: false,
+        error: null,
     },
     reducers: {
         clearProducts(state) {
@@ -51,6 +104,55 @@ const productsSlice = createSlice({
         });
         builder.addCase(getProducts.rejected, (state) => {
             state.isLoading = false;
+        });
+        builder.addCase(postProduct.fulfilled, (state, { payload }) => {
+            state.list.push(payload); // добавляем новый продукт в список
+            state.isLoading = false;
+        });
+        builder.addCase(postProduct.rejected, (state, { payload }) => {
+            state.isLoading = false;
+            state.error = payload;
+        });
+        builder.addCase(deleteProduct.pending, (state) => {
+            state.isLoading = true;
+            state.error = null;
+        });
+        builder.addCase(deleteProduct.fulfilled, (state, { payload }) => {
+            state.list = state.list.filter(product => product.id !== payload.id);
+            state.isLoading = false;
+        });
+        builder.addCase(deleteProduct.rejected, (state, { payload }) => {
+            state.isLoading = false;
+            state.error = payload;
+        });
+        builder.addCase(updateProduct.pending, (state) => {
+            state.isLoading = true;
+            state.error = null;
+        });
+        builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
+            const index = state.list.findIndex(product => product.id === payload.id);
+            if (index !== -1) {
+                state.list[index] = payload;
+            }
+            state.isLoading = false;
+        });
+        builder.addCase(updateProduct.rejected, (state, { payload }) => {
+            state.isLoading = false;
+            state.error = payload;
+        });
+        builder.addCase(getProductById.pending, (state) => {
+            state.isLoading = true;
+            state.productDetails = null;
+            state.error = null;
+        });
+        builder.addCase(getProductById.fulfilled, (state, { payload }) => {
+            // Optionally handle the fetched product, e.g., storing in a specific state field
+            state.productDetails = payload;
+            state.isLoading = false;
+        });
+        builder.addCase(getProductById.rejected, (state, { payload }) => {
+            state.isLoading = false;
+            state.error = payload;
         });
     },
 });

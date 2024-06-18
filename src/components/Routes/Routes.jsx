@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Home from '@components/Home/Home';
 
 import { ROUTES } from '@utils/routes';
@@ -10,6 +10,9 @@ import Cart from '../Cart/Cart';
 import Settings from '../Settings/Settings';
 import Orders from '../Orders/Orders';
 import Admin from '../Admin/Admin';
+import { useSelector } from "react-redux";
+
+
 
 const AppRoutes = () => (
     <Routes>

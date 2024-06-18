@@ -29,7 +29,7 @@ const Profile = () => {
 
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/upload/photo`,
+        `${BASE_URL}/upload/photo`,
         formData,
         {
           headers: {
