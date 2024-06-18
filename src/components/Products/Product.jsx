@@ -8,19 +8,19 @@ import { addItemToCart } from "../../features/user/userSlice";
 const SIZES = [4, 4.5, 5];
 
 const Product = (item) => {
-    const { title, price, picture, description } = item;
+    const { title, price, imageUrls, description } = item;
     const dispatch = useDispatch();
 
-    // Если picture это строка, создайте массив с одним элементом
-    const pictures = Array.isArray(picture) ? picture : [picture];
+    // Если imageUrls это строка, создайте массив с одним элементом
+    
         const [currentImage, setCurrentImage] = useState();
         const [currentSize, setCurrentSize] = useState();
 
         useEffect(() => {
-            if(!pictures.length) return;
+            if(!imageUrls.length) return;
 
-            setCurrentImage(pictures[0]);
-        }, [pictures]);
+            setCurrentImage(imageUrls[0]);
+        }, [imageUrls]);
 
         const addToCart = () => {
             dispatch(addItemToCart(item))
@@ -34,12 +34,12 @@ const Product = (item) => {
                     style={{ backgroundImage: `url(${currentImage})` }}
                 />
                     <div className={styles["images-list"]}>
-                {pictures.map((image, i) => (
+                {imageUrls.map((image, i) => (
                     <div 
                         key={i}
                         className={styles.image}
                         style={{ backgroundImage: `url(${image})` }}
-                        onClick={() => setCurrentImage(picture)}
+                        onClick={() => setCurrentImage(imageUrls)}
                     />
                 ))}
                 </div>

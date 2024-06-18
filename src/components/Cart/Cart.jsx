@@ -37,17 +37,17 @@ const Cart = () => {
         <>
           <div className={styles.list}>
             {cart.map((item) => {
-              const { title, category, picture, price, id, quantity } = item;
+              const { title, categoryName, imageUrls, price, id, quantity } = item;
 
               return (
                 <div className={styles.item} key={id}>
                   <div
                     className={styles.image}
-                    style={{ backgroundImage: `url(${picture})` }}
+                    style={{ backgroundImage: `url(${imageUrls[0]})` }}
                   />
                   <div className={styles.info}>
                     <h3 className={styles.name}>{title}</h3>
-                    <div className={styles.category}>{category.name}</div>
+                    <div className={styles.category}>{categoryName}</div>
                   </div>
 
                   <div className={styles.price}>{price}$</div>

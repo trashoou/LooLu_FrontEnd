@@ -90,7 +90,7 @@ const productsSlice = createSlice({
             state.filtered = state.list.filter(({ price }) => price < payload);
         },
         getRelatedProducts: (state, { payload }) => {
-            const list = state.list.filter(({ category: { id } }) => id === payload);
+            const list = state.list.filter(({ categoryId }) => categoryId === payload);
             state.related = shuffle(list);
         },
     },

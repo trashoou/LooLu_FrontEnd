@@ -117,7 +117,7 @@ const Header = () => {
                 ? "Loading..."
                 : !data.length
                 ? "No results"
-                : data.map(({ title, picture, id }) => {
+                : data.map(({ title, imageUrls, id }) => {
                     return (
                       <Link
                         key={id}
@@ -127,7 +127,7 @@ const Header = () => {
                       >
                         <div
                           className={styles.image}
-                          style={{ backgroundImage: `url(${picture})` }}
+                          style={{ backgroundImage: `url(${imageUrls[0]})` }}
                         />
 
                         <div className={styles.title}>{title}</div>

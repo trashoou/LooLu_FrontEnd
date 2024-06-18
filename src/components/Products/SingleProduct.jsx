@@ -1,19 +1,17 @@
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
 import { useGetProductQuery } from "../../features/api/apiSlice";
-
+import { getRelatedProducts } from "../../features/products/productsSlice";
 import { ROUTES } from "../../utils/routes";
 import Product from "./Product";
 import Products from "./Products";
-import { useDispatch, useSelector } from "react-redux";
-import { getRelatedProducts } from "../../features/products/productsSlice";
 
 const SingleProduct = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
-  const { list, related } = useSelector (({ products }) => products);
+  const { list, related } = useSelector(({ products }) => products);
 
   const { data, isLoading, isFetching, isSuccess } = useGetProductQuery({ id });
 
@@ -21,22 +19,24 @@ const SingleProduct = () => {
     if (!isFetching && !isLoading && !isSuccess) {
       navigate(ROUTES.HOME);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isFetching, isSuccess]);
+  }, [isLoading, isFetching, isSuccess, navigate]);
 
   useEffect(() => {
-    if(!data || !list.length) return;
-    
-      dispatch(getRelatedProducts(data.category.id));
-    
+    if (!data || !list.length) return;
+
+    if (data.categoryId) {
+      dispatch(getRelatedProducts(data.categoryId));
+    }
   }, [data, dispatch, list.length]);
 
-  return !data ? (
+  return isLoading || isFetching ? (
     <section className="preloader">Loading...</section>
+  ) : !data ? (
+    <section className="error">Product not found.</section>
   ) : (
     <>
       <Product {...data} />
-      <Products products={related} amount={5} title="Related products"/>
+      <Products products={related} amount={5} title="Related products" />
     </>
   );
 };
