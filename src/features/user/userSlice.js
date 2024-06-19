@@ -15,6 +15,19 @@ export const createUser = createAsyncThunk(
   }
 );
 
+export const deleteUser = createAsyncThunk(
+  "users/deleteUser",
+  async (userId, thunkAPI) => {
+    try {
+      await axios.delete(`${BASE_URL}/users/${userId}`);
+      return userId; // Возвращаем id удаленного пользователя для последующей обработки в Redux
+    } catch (error) {
+      console.error("Failed to delete user", error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const fetchUserProfile = createAsyncThunk(
   "users/fetchUserProfile",
   async (_, thunkAPI) => {
@@ -33,6 +46,18 @@ export const fetchUserProfile = createAsyncThunk(
     } catch (err) {
       console.log(err);
       return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
+export const fetchUserById = createAsyncThunk(
+  'user/fetchUserById',
+  async (userId, thunkAPI) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/users/${userId}`);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -84,6 +109,8 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+
+
 export const logoutUser = createAsyncThunk(
   "users/logoutUser",
   async (_, thunkAPI) => {
@@ -124,6 +151,7 @@ const userSlice = createSlice({
     isLoading: false,
     formType: "signup",
     showForm: false,
+    error: null,
   },
   reducers: {
     addItemToCart: (state, { payload }) => {
@@ -158,6 +186,26 @@ const userSlice = createSlice({
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.currentUser = null;
     });
+    builder.addCase(fetchUserById.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchUserById.fulfilled, (state, action) => {
+      state.loading = false;
+      state.currentUser = action.payload;
+    });
+    builder.addCase(fetchUserById.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(deleteUser.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(deleteUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
   },
 });
 
@@ -165,3 +213,7 @@ export const { addItemToCart, removeItemFromCart, toggleForm, toggleFormType } =
   userSlice.actions;
 
 export default userSlice.reducer;
+
+export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectUserLoading = (state) => state.user.loading;
+export const selectUserError = (state) => state.user.error;

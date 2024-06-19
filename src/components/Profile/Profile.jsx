@@ -17,41 +17,13 @@ const Profile = () => {
     email: "",
     password: "",
     username: "",
-    avatarPath: "",
+    avatarPath: "", 
   });
 
-  const handleFileUpload = async (files) => {
-    if (files.length === 0) return;
-
-    const file = files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/upload/photo`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      // Обновляем состояние values с новым avatarPath, если требуется
-      const updatedValues = { ...values, avatarPath: response.data };
-      setValues(updatedValues);
-      dispatch(updateUser(updatedValues)); // Опционально, если требуется обновить пользователя на сервере
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      // Обработка ошибок загрузки
-    }
-  };
-
   useEffect(() => {
-    if (!currentUser) return;
-
-    setValues(currentUser);
+    if (currentUser) {
+      setValues(currentUser);
+    }
   }, [currentUser]);
 
   const handleChange = ({ target: { value, name } }) => {
@@ -76,14 +48,16 @@ const Profile = () => {
     dispatch(updateUser(values));
   };
 
-  
   return (
     <section className={styles.profile}>
       {!currentUser ? (
         <span>You need to log in</span>
       ) : (
         <>
-          <form className={styles.form} onSubmit={handleSubmit}> <div style={{ textAlign: "center" }}><h2>User Data</h2></div>
+          <form className={styles.form} onSubmit={handleSubmit}>
+            <div style={{ textAlign: "center" }}>
+              <h2>User Data</h2>
+            </div>
             <div className={styles.group}>
               <input
                 type="text"
@@ -144,17 +118,14 @@ const Profile = () => {
               />
             </div>
 
-          
-            <div className={styles.center}>
-              <label htmlFor="avatarUpload" className={`${styles.uploadLabel} ${styles.title}`}>
-                Upload Avatar
-              </label>
+            <div className={styles.group}>
               <input
-                id="avatarUpload"
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e.target.files)}
-                style={{ display: "none" }}
+                type="text" // Изменяем на текстовый input для ввода URL
+                placeholder="URL to your avatar"
+                name="avatarPath"
+                value={values.avatarPath}
+                autoComplete="off"
+                onChange={handleChange}
               />
             </div>
 
