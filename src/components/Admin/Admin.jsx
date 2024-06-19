@@ -6,11 +6,13 @@ import {
   deleteProduct,
   getProducts,
   getProductById,
+  updateProduct
 } from "../../features/products/productsSlice";
 import styles from "../../styles/Admin.module.css";
 
 const Admin = () => {
   const { currentUser } = useSelector(({ user }) => user);
+  // eslint-disable-next-line no-unused-vars
   const { productDetails, isLoading, error } = useSelector(
     ({ products }) => products
   );
@@ -74,6 +76,17 @@ const Admin = () => {
     } catch (error) {
       console.error('Failed to add product', error);
       // Обработка ошибок отправки
+    }
+  };
+
+  const handleUpdateFormSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await dispatch(updateProduct(productData));
+      alert('Product updated successfully');
+    } catch (error) {
+      console.error('Failed to update product', error);
     }
   };
 
@@ -258,7 +271,106 @@ const Admin = () => {
                 </div>
               )}
               {activeProductTab === "Update Product" && (
-                <div>Update Product Content</div>
+                <div>
+                  <h2>Update Product</h2>
+                  <form className={styles.form} onSubmit={handleUpdateFormSubmit}>
+                    <div className={styles.group}>
+                      <label>
+                        Product ID:
+                        <input
+                          type="text"
+                          name="id"
+                          value={productData.id}
+                          onChange={handleInputChange}
+                        />
+                      </label>
+                      <button type="button" onClick={handleGetProduct}>
+                        Load Product Details
+                      </button>
+                    </div>
+                    {isLoadingDetails ? (
+                    <p>Loading...</p>
+                  ) : error ? (
+                    error.response && error.response.status === 404 ? (
+                      <p>Product not found.</p>
+                    ) : (
+                      <p>
+                        Error:{" "}
+                        {error.message ||
+                          "Error occurred while fetching product details."}
+                      </p>
+                    )
+                  ) : !productDetails ? (
+                    <p>Product not found.</p>
+                  ) : (
+                    <div>
+                      <p>Name: {productDetails.title}</p>
+                      <p>Description: {productDetails.description}</p>
+                      <p>Price: {productDetails.price}</p>
+                    </div>
+                  )}
+                    <div className={styles.group}>
+                      <label>
+                        Title:
+                        <input
+                          type="text"
+                          name="title"
+                          value={productData.title}
+                          onChange={handleInputChange}
+                        />
+                      </label>
+                    </div>
+                    <div className={styles.group}>
+                      <label>
+                        Description:
+                        <input
+                          type="text"
+                          name="description"
+                          value={productData.description}
+                          onChange={handleInputChange}
+                        />
+                      </label>
+                    </div>
+                    <div className={styles.group}>
+                      <label>
+                        Price:
+                        <input
+                          type="number"
+                          name="price"
+                          value={productData.price}
+                          onChange={handleInputChange}
+                        />
+                      </label>
+                    </div>
+                    <div className={styles.group}>
+                      <label>
+                        Category:
+                        <input
+                          type="number"
+                          name="categoryId"
+                          value={productData.categoryId}
+                          onChange={handleInputChange}
+                        />
+                      </label>
+                    </div>
+                    {productData.images.map((image, index) => (
+                      <div className={styles.group} key={index}>
+                        <label>
+                          Image URL:
+                          <input
+                            type="text"
+                            value={image}
+                            onChange={(e) => handleImageChange(e, index)}
+                          />
+                        </label>
+                      </div>
+                    ))}
+                    <button type="button" onClick={handleAddImage}>
+                      Add Another Image
+                    </button>
+                    <button type="submit">Update Product</button>
+                  </form>
+                </div>
               )}
               {activeProductTab === "Get Product" && (
                 <div>

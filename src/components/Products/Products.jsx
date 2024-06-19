@@ -15,7 +15,7 @@ const Products = ({ title, style = {}, products = [], amount }) => {
             <div
               className={styles.image}
               style={{
-                backgroundImage: `url(${imageUrls.length > 0 ? imageUrls[0] : ''})`,
+                backgroundImage: `url(${imageUrls && imageUrls.length > 0 ? imageUrls[0] : ''})`,
               }}
             />
 
