@@ -25,8 +25,8 @@ const AppRoutes = () => (
         <Route path={ROUTES.SETTINGS} element={<Settings/>} />     
         <Route path={ROUTES.ORDERS} element={<Orders/>} />   
         <Route path={ROUTES.ADMIN} element={<Admin/>} />   
-        <Route path={ROUTES.HELP} element={<Help/>} />   
-
+        <Route path={ROUTES.HELP} element={<Help/>} />  
+        
     </Routes>
 );
 

@@ -12,35 +12,39 @@ import { NumberParam, StringParam, useQueryParam } from "use-query-params";
 
 const Category = () => {
   const { id } = useParams();
-  const { list } = useSelector(({ categories }) => categories);
-
-  // eslint-disable-next-line no-unused-vars
-  const [categoryId, setCategoryId] = useQueryParam("categoryId", NumberParam);
+  const { list } = useSelector((state) => state.categories);
+  const [setCategoryId] = useQueryParam("categoryId", NumberParam);
   const [title, setTitle] = useQueryParam("title", StringParam);
-  const [price_min, setPrice_min] = useQueryParam("price_min", NumberParam);
-  const [price_max, setPrice_max] = useQueryParam("price_max", NumberParam);
+  const [price_min, setPrice_min] = useQueryParam("price_min", StringParam);
+  const [price_max, setPrice_max] = useQueryParam("price_max", StringParam);
 
   const { data = [], isLoading, isSuccess } = useGetProductsQuery({
     params: {
       categoryId: Number(id),
       title: title || "",
-      price_min: price_min || 0,
-      price_max: price_max || 10000,
+      price_min: price_min ? Number(price_min) : 0,
+      price_max: price_max ? Number(price_max) : 10000,
     },
   });
 
   useEffect(() => {
     setCategoryId(Number(id));
     setTitle(title || "");
-    setPrice_min(price_min || 0);
-    setPrice_max(price_max || 10000);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, setCategoryId, setTitle, setPrice_min, setPrice_max]);
+    setPrice_min(price_min || "0");
+    setPrice_max(price_max || "10000");
+  }, [id, setCategoryId, setTitle, setPrice_min, setPrice_max, title, price_min, price_max]);
 
   const handleReset = () => {
     setTitle("");
-    setPrice_min(0);
-    setPrice_max(10000);
+    setPrice_min("");
+    setPrice_max("");
+  };
+
+  const handlePriceChange = (setter) => (e) => {
+    const value = e.target.value;
+    // Remove leading zeros if there are other digits after them
+    const sanitizedValue = value.replace(/^0+(?=\d)/, '');
+    setter(sanitizedValue);
   };
 
   return (
@@ -59,26 +63,26 @@ const Category = () => {
         </div>
         <div className={styles.filter}>
           <input
-            type="number"
+            type="text"
             name="price_min"
-            onChange={(e) => setPrice_min(Number(e.target.value))}
+            onChange={handlePriceChange(setPrice_min)}
             placeholder="0"
             value={price_min}
           />
-          <span>Price from</span>
+          <span>price min</span>
         </div>
         <div className={styles.filter}>
           <input
-            type="number"
+            type="text"
             name="price_max"
-            onChange={(e) => setPrice_max(Number(e.target.value))}
-            placeholder="0"
+            onChange={handlePriceChange(setPrice_max)}
+            placeholder="10000"
             value={price_max}
           />
-          <span>Price to</span>
+          <span>price max</span>
         </div>
 
-        <button type="reset" onClick={handleReset}>
+        <button type="reset" onClick={handleReset} key="reset">
           Reset
         </button>
       </form>
@@ -87,7 +91,7 @@ const Category = () => {
         <div className="preloader">Loading...</div>
       ) : !isSuccess || data.length === 0 ? (
         <div className={styles.back}>
-          <span>No results</span>
+          <span>No Results</span>
         </div>
       ) : (
         <Products
