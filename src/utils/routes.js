@@ -7,6 +7,7 @@ export const ROUTES = {
     SETTINGS: '/settings',
     ORDERS: '/orders',
     ADMIN: '/admin',
+    HELP: '/Help',
 }
 
 

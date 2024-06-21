@@ -10,6 +10,7 @@ import Cart from '../Cart/Cart';
 import Settings from '../Settings/Settings';
 import Orders from '../Orders/Orders';
 import Admin from '../Admin/Admin';
+import Help from '../Help/Help';
 
 
 
@@ -24,6 +25,7 @@ const AppRoutes = () => (
         <Route path={ROUTES.SETTINGS} element={<Settings/>} />     
         <Route path={ROUTES.ORDERS} element={<Orders/>} />   
         <Route path={ROUTES.ADMIN} element={<Admin/>} />   
+        <Route path={ROUTES.HELP} element={<Help/>} />   
 
     </Routes>
 );
