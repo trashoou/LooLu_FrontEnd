@@ -110,7 +110,7 @@ const UpdateProduct = () => {
         <div className={styles.userData}>
           <p><span className={styles.fieldName}>Name: </span>{productDetails.title}</p>
           <p><span className={styles.fieldName}>Description: </span>{productDetails.description}</p>
-          <p><span className={styles.fieldName}>Price: </span>{productDetails.price}</p>
+          <p><span className={styles.fieldName}>Price: </span>{productDetails.price}$</p>
         </div>
       )}
         <div className={styles.group}>

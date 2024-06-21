@@ -9,6 +9,11 @@ import GetProduct from "./ProductsManage/GetProduct";
 import UpdateProduct from "./ProductsManage/UpdateProduct";
 import GetUser from "./UsersManage/GetUser";
 import DeleteUser from "./UsersManage/DeleteUser";
+import AddCategory from "./ManageCategories/AddCategory";
+import DeleteCategory from "./ManageCategories/DeleteCategory";
+import GetCategory from "./ManageCategories/GetCategory";
+import UpdateCategory from "./ManageCategories/UpdateCategory";
+import UpdateUser from "./UsersManage/UpdateUser";
 
 const Admin = () => {
   const { currentUser } = useSelector(({ user }) => user);
@@ -107,7 +112,8 @@ const Admin = () => {
             </div>
           </div>
         )}
-        {activeTab === "UsersControll" && (<div>
+        {activeTab === "UsersControll" && (
+          <div>
             <div className={styles.tabs}>
               <div
                 className={`${styles.tab} ${
@@ -125,16 +131,67 @@ const Admin = () => {
               >
                 Delete User
               </div>
-              
-              
+              <div
+                className={`${styles.tab} ${
+                  activeProductTab === "Update User Role" && styles.active
+                }`}
+                onClick={() => handleProductTabClick("Update User Role")}
+              >
+                Update User Role
+              </div>
             </div>
             <div className={styles.subTabContent}>
               {activeProductTab === "Get User" && <GetUser />}
               {activeProductTab === "Delete User" && <DeleteUser />}
-              
+              {activeProductTab === "Update User Role" && <UpdateUser />}
             </div>
-          </div>)}
-        {activeTab === "CategoryControll" && <div>Content for Categories</div>}
+          </div>
+        )}
+        {activeTab === "CategoryControll" && (
+          <div>
+          <div className={styles.tabs}>
+            <div
+              className={`${styles.tab} ${
+                activeProductTab === "Add Category" && styles.active
+              }`}
+              onClick={() => handleProductTabClick("Add Category")}
+            >
+              Add Category
+            </div>
+            <div
+              className={`${styles.tab} ${
+                activeProductTab === "Delete Category" && styles.active
+              }`}
+              onClick={() => handleProductTabClick("Delete Category")}
+            >
+              Delete Category
+            </div>
+            <div
+              className={`${styles.tab} ${
+                activeProductTab === "Update Category" && styles.active
+              }`}
+              onClick={() => handleProductTabClick("Update Category")}
+            >
+              Update Category
+            </div>
+            <div
+              className={`${styles.tab} ${
+                activeProductTab === "Get Category" && styles.active
+              }`}
+              onClick={() => handleProductTabClick("Get Category")}
+            >
+              Get Category
+            </div>
+          </div>
+          <div className={styles.subTabContent}>
+            {activeProductTab === "Add Category" && <AddCategory />}
+            {activeProductTab === "Delete Category" && <DeleteCategory />}
+            {activeProductTab === "Update Category" && <UpdateCategory />}
+            {activeProductTab === "Get Category" && <GetCategory />}
+            
+          </div>
+        </div>
+        )}
       </div>
     </section>
   );

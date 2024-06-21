@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../features/user/userSlice";
 
-import axios from "axios";
-import { BASE_URL } from "../../utils/constants";
-
 import styles from "../../styles/Profile.module.css";
 
 const Profile = () => {

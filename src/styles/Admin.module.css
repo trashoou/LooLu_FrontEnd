@@ -60,6 +60,16 @@
     text-align: right;
   }
 
+  .fieldNameImage {
+    display: flex;
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 16px;
+    color: var(--violet);
+    text-align: right;
+  }
+
   .userData {
     color: var(--sea);
   }
@@ -77,4 +87,15 @@
     box-shadow: 0px 4px 8px rgba(141, 123, 123, 0.1);
   }
 
-  
+  .images {
+    display: flex;
+    gap: 20px;
+  }
+
+  .image {
+    width: 50%;
+    height: 230px;
+    display: block; /* Превращаем изображение в блочный элемент */
+    margin: 0 auto; /* Автоматически центрируем по горизонтали */
+    border-radius: 8px; /* Закругляем углы */
+}
