@@ -9,25 +9,23 @@ import Products from "./Products";
 
 const SingleProduct = () => {
   const dispatch = useDispatch();
-  const {id} = useParams();
+  const { productId } = useParams(); // Изменено на productId для соответствия пути
   const navigate = useNavigate();
-  const { list, related } = useSelector(({ products }) => products);
+  const { related } = useSelector(({ products }) => products);
 
-  const { data, isLoading, isFetching, isSuccess } = useGetProductQuery({id});
+  const { data, isLoading, isFetching, isError } = useGetProductQuery({ id: productId });
 
   useEffect(() => {
-    if (!isFetching && !isLoading && !isSuccess) {
+    if (isError) {
       navigate(ROUTES.HOME);
     }
-  }, [isLoading, isFetching, isSuccess, navigate]);
+  }, [isError, navigate]);
 
   useEffect(() => {
-    if (!data || !list.length) return;
-
-    if (data.categoryId) {
+    if (data && data.categoryId) {
       dispatch(getRelatedProducts(data.categoryId));
     }
-  }, [data, dispatch, list.length]);
+  }, [data, dispatch]);
 
   return isLoading || isFetching ? (
     <section className="preloader">Loading...</section>

@@ -7,6 +7,11 @@ export const ROUTES = {
     SETTINGS: '/settings',
     ORDERS: '/orders',
     ADMIN: '/admin',
+
+    NEW_PAGE: '/new-page',
+    CATEGORY_PAGE: '/category/:categoryId',
+
+    PAGE_SINGLE_PRODUCT: '/product/:productId',
 }
 
 

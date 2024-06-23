@@ -1,0 +1,21 @@
+.categoryButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px;
+  justify-content: center;
+}
+
+.categoryButton {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.categoryButton:hover {
+  background: #0056b3;
+}

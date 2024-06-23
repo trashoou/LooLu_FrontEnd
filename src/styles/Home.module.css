@@ -127,3 +127,36 @@
   color: var(--violet);
   font-weight: 700;
 }
+/* Новые стили для NewPage */
+.productList {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 16px;
+}
+
+.productItem {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+  text-align: center;
+}
+
+.productItem img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 16px;
+}
+
+@media (max-width: 1024px) {
+  .productList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .productList {
+    grid-template-columns: 1fr;
+  }
+}
