@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
@@ -13,31 +13,45 @@ import { NumberParam, StringParam, useQueryParam } from "use-query-params";
 const Category = () => {
   const { id } = useParams();
   const { list } = useSelector((state) => state.categories);
-  const [setCategoryId] = useQueryParam("categoryId", NumberParam);
+
+  const [categoryId, setCategoryId] = useQueryParam("categoryId", NumberParam);
   const [title, setTitle] = useQueryParam("title", StringParam);
   const [price_min, setPrice_min] = useQueryParam("price_min", StringParam);
   const [price_max, setPrice_max] = useQueryParam("price_max", StringParam);
 
+  // локальное состояние для инициализации значений
+  const [localTitle, setLocalTitle] = useState(title || "");
+  const [localPriceMin, setLocalPriceMin] = useState(price_min || "");
+  const [localPriceMax, setLocalPriceMax] = useState(price_max || "");
+
+  const queryParams = {
+    categoryId: Number(id),
+    title: localTitle,
+  };
+
+  if (localPriceMin) {
+    queryParams.price_min = Number(localPriceMin);
+  }
+
+  if (localPriceMax) {
+    queryParams.price_max = Number(localPriceMax);
+  }
+
   const { data = [], isLoading, isSuccess } = useGetProductsQuery({
-    params: {
-      categoryId: Number(id),
-      title: title || "",
-      price_min: price_min ? Number(price_min) : 0,
-      price_max: price_max ? Number(price_max) : 10000,
-    },
+    params: queryParams,
   });
 
   useEffect(() => {
     setCategoryId(Number(id));
-    setTitle(title || "");
-    setPrice_min(price_min || "0");
-    setPrice_max(price_max || "10000");
-  }, [id, setCategoryId, setTitle, setPrice_min, setPrice_max, title, price_min, price_max]);
+    setTitle(localTitle);
+    setPrice_min(localPriceMin);
+    setPrice_max(localPriceMax);
+  }, [id, setCategoryId, setTitle, setPrice_min, setPrice_max, localTitle, localPriceMin, localPriceMax]);
 
   const handleReset = () => {
-    setTitle("");
-    setPrice_min("");
-    setPrice_max("");
+    setLocalTitle("");
+    setLocalPriceMin("");
+    setLocalPriceMax("");
   };
 
   const handlePriceChange = (setter) => (e) => {
@@ -49,25 +63,25 @@ const Category = () => {
 
   return (
     <section className={styles.wrapper}>
-      <h2 className={styles.title}>{list.find(item => item.id === Number(id))?.name}</h2>
+      <h2 className={styles.title}>{list?.find(item => item.id === Number(id))?.name || "Category"}</h2>
 
       <form className={styles.filters} onSubmit={(e) => e.preventDefault()}>
         <div className={styles.filter}>
           <input
             type="text"
             name="title"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => setLocalTitle(e.target.value)}
             placeholder="Product name"
-            value={title}
+            value={localTitle}
           />
         </div>
         <div className={styles.filter}>
           <input
             type="text"
             name="price_min"
-            onChange={handlePriceChange(setPrice_min)}
+            onChange={handlePriceChange(setLocalPriceMin)}
             placeholder="0"
-            value={price_min}
+            value={localPriceMin}
           />
           <span>price min</span>
         </div>
@@ -75,9 +89,9 @@ const Category = () => {
           <input
             type="text"
             name="price_max"
-            onChange={handlePriceChange(setPrice_max)}
+            onChange={handlePriceChange(setLocalPriceMax)}
             placeholder="10000"
-            value={price_max}
+            value={localPriceMax}
           />
           <span>price max</span>
         </div>
