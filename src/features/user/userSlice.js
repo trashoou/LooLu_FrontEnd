@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
 
+
 export const createUser = createAsyncThunk(
   "users/createUser",
   async (payload, thunkAPI) => {
@@ -9,6 +10,7 @@ export const createUser = createAsyncThunk(
       const res = await axios.post(`${BASE_URL}/users`, payload);
       return res.data;
     } catch (err) {
+      alert('Ошибка ввода данных  - [' + err + ']');
       console.log(err);
       return thunkAPI.rejectWithValue(err);
     }
@@ -89,7 +91,8 @@ export const loginUser = createAsyncThunk(
       // Возвращение данных профиля
       return profileResponse.data;
     } catch (err) {
-      console.log(err);
+      alert('Ошибка ввода данных  - [' + err + ']');
+            console.log(err);
       return thunkAPI.rejectWithValue(err);
     }
   }
@@ -126,10 +129,12 @@ export const logoutUser = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }
+        }        
       );
 
       localStorage.removeItem("accessToken");
+
+      window.location.reload();
 
       return true;
     } catch (err) {

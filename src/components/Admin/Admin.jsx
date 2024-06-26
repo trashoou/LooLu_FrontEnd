@@ -131,19 +131,10 @@ const Admin = () => {
               >
                 Delete User
               </div>
-              <div
-                className={`${styles.tab} ${
-                  activeProductTab === "Update User Role" && styles.active
-                }`}
-                onClick={() => handleProductTabClick("Update User Role")}
-              >
-                Update User Role
-              </div>
             </div>
             <div className={styles.subTabContent}>
               {activeProductTab === "Get User" && <GetUser />}
               {activeProductTab === "Delete User" && <DeleteUser />}
-              {activeProductTab === "Update User Role" && <UpdateUser />}
             </div>
           </div>
         )}

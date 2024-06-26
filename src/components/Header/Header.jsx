@@ -18,7 +18,7 @@ const Header = () => {
 
   const [searchValue, setSearchValue] = useState("");
 
-  const { currentUser, cart } = useSelector(({ user }) => user);
+  const { currentUser } = useSelector(({ user }) => user);
   const { cartItems } = useSelector(({ cart }) => cart); // Получаем cartItems из Redux state
 
   const [values, setValues] = useState({ username: "Guest", avatarPath: AVATAR });

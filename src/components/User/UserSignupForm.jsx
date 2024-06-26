@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createUser } from "../../features/user/userSlice";
+import { createUser, loginUser, fetchUserProfile } from "../../features/user/userSlice";
 
 import styles from "../../styles/User.module.css";
 
@@ -18,15 +18,33 @@ const UserSignupForm = ({ toggleCurrentFormType, closeForm }) => {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const isNotEmpty = Object.values(values).every((val) => val);
 
     if (!isNotEmpty) return;
 
-    dispatch(createUser(values));
-    closeForm();
+    try {
+      // Создаем пользователя
+      await dispatch(createUser(values));
+
+      // Логинимся для получения access token
+      const loginValues = {
+        email: values.email,
+        password: values.password,
+      };
+      await dispatch(loginUser(loginValues));
+
+      // Получаем профиль пользователя после успешного логина
+      
+      // Закрываем форму после успешной регистрации, логина и получения профиля
+      closeForm();
+    } catch (error) {
+      console.error("Failed to create user or fetch profile:", error);
+      // Обработка ошибок при регистрации, логине или получении профиля
+      // Здесь можно добавить логику для отображения ошибок на UI
+    }
   };
 
   return (

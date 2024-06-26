@@ -3,15 +3,14 @@ import styles from "@styles/Product.module.css";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../utils/routes";
 import { useDispatch, useSelector } from "react-redux";
-import { addItemToCart } from "../../features/cart/cartSlice"; // Убедитесь, что у вас есть этот action
-import { fetchUserProfile, selectCurrentUser, selectUserLoading, selectUserError } from "../../features/user/userSlice";
+import { addItemToCart, selectCartItems } from "../../features/cart/cartSlice";
+import { selectCurrentUser } from "../../features/user/userSlice";
 
 const Product = (item) => {
   const { id, title, price, imageUrls, description } = item;
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
-  const isLoading = useSelector(selectUserLoading);
-  const error = useSelector(selectUserError);
+  const cartItems = useSelector(selectCartItems);
   const isAuthenticated = !!user;
 
   const [currentImage, setCurrentImage] = useState();
@@ -22,11 +21,7 @@ const Product = (item) => {
     }
   }, [imageUrls]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(fetchUserProfile());
-    }
-  }, [isAuthenticated, dispatch]);
+  const isInCart = cartItems && cartItems.some((item) => item.productId === id);
 
   const addToCart = () => {
     if (!isAuthenticated) {
@@ -34,7 +29,13 @@ const Product = (item) => {
       return;
     }
 
+    if (isInCart) {
+      alert("This product is already in your cart!");
+      return;
+    }
+
     dispatch(addItemToCart({ cartId: user.cartId, productId: id, quantity: 1 }));
+    window.location.reload();
   };
 
   return (

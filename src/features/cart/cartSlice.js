@@ -2,11 +2,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
 
+// Определение асинхронных операций
 export const addItemToCart = createAsyncThunk(
   "cart/addItemToCart",
-  async (cartItem, { rejectWithValue }) => {
+  async ({ cartId, productId, quantity }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/cart`, cartItem);
+      const response = await axios.post(`${BASE_URL}/cart`, {
+        cartId,
+        productId,
+        quantity,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -27,14 +32,10 @@ export const getCartItems = createAsyncThunk(
 );
 
 export const deleteItemFromCart = createAsyncThunk(
-  "cart/deleteItemFromCart",
-  async (itemId, { rejectWithValue }) => {
-    try {
-      await axios.delete(`${BASE_URL}/cart/${itemId}`);
-      return itemId;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
+  'cart/deleteItemFromCart',
+  async ({ cartId, itemId }) => {
+    await axios.delete(`${BASE_URL}/cart/${cartId}/${itemId}`);
+    return itemId; // Возвращаем itemId для удаления из состояния
   }
 );
 
@@ -44,7 +45,7 @@ export const updateCartItem = createAsyncThunk(
     try {
       const response = await axios.put(
         `${BASE_URL}/cart/${cartId}/${itemId}`,
-        { ...updateCartItem, cartId } // Добавляем cartId в тело запроса
+        { ...updateCartItem, cartId }
       );
       return response.data;
     } catch (error) {
@@ -72,7 +73,7 @@ export const fetchCartItemsByCartId = createAsyncThunk(
       const response = await axios.get(`${BASE_URL}/cart/${cartId}`);
       return response.data;
     } catch (error) {
-      throw Error(error.response.data); // Ловим и передаем ошибку дальше
+      throw Error(error.response.data);
     }
   }
 );
@@ -87,29 +88,28 @@ const cartSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(addItemToCart.pending, (state) => {
-      state.status = "loading";
-    })
-    .addCase(addItemToCart.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      state.cartItems = [...state.cartItems, action.payload]; // Используем spread operator для добавления элемента
-    })
-    .addCase(addItemToCart.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.payload;
-    })
-    // Другие кейсы оставляются без изменений
-    .addCase(getCartItems.pending, (state) => {
-      state.status = "loading";
-    })
-    .addCase(getCartItems.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      state.cartItems = action.payload;
-    })
-    .addCase(getCartItems.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.payload;
-    })
+      .addCase(addItemToCart.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addItemToCart.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.cartItems = [...state.cartItems, action.payload];
+      })
+      .addCase(addItemToCart.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(getCartItems.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getCartItems.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.cartItems = action.payload;
+      })
+      .addCase(getCartItems.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
       .addCase(deleteItemFromCart.pending, (state) => {
         state.status = "loading";
       })
