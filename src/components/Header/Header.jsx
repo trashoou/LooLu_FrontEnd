@@ -10,6 +10,7 @@ import LOGO from "../../images/logo.png";
 import AVATAR from "../../images/avatar.jpg";
 import { logoutUser, toggleForm } from "../../features/user/userSlice";
 import { fetchCartItemsByCartId } from "../../features/cart/cartSlice"; // Подключаем экшн для получения данных о корзине
+import { useGetProductsQuery } from "../../features/api/apiSlice";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -22,6 +23,10 @@ const Header = () => {
   const { cartItems } = useSelector(({ cart }) => cart); // Получаем cartItems из Redux state
 
   const [values, setValues] = useState({ username: "Guest", avatarPath: AVATAR });
+
+  const { data, isLoading } = useGetProductsQuery({
+    params: { title: searchValue },
+  });
 
   useEffect(() => {
     if (!currentUser) return;
@@ -51,6 +56,8 @@ const Header = () => {
       setIsDropdownOpen(!isDropdownOpen);
     }
   };
+
+  
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -116,7 +123,31 @@ const Header = () => {
             />
           </div>
 
-          {/* Отображение результатов поиска (добавьте ваш код здесь) */}
+          {searchValue && (
+            <div className={styles.box}>
+              {isLoading
+                ? "Loading..."
+                : !data.length
+                ? "No results"
+                : data.map(({ title, imageUrls, id }) => {
+                    return (
+                      <Link
+                        key={id}
+                        onClick={() => setSearchValue("")}
+                        className={styles.item}
+                        to={`/products/${id}`}
+                      >
+                        <div
+                          className={styles.image}
+                          style={{ backgroundImage: `url(${imageUrls[0]})` }}
+                        />
+
+                        <div className={styles.title}>{title}</div>
+                      </Link>
+                    );
+                  })}
+            </div>
+          )}
 
         </form>
 
