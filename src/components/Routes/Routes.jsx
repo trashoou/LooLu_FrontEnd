@@ -11,6 +11,7 @@ import Settings from '../Settings/Settings';
 import Orders from '../Orders/Orders';
 import Admin from '../Admin/Admin';
 import Help from '../Help/Help';
+import Terms from '../Help/Terms';
 
 
 
@@ -26,6 +27,7 @@ const AppRoutes = () => (
         <Route path={ROUTES.ORDERS} element={<Orders/>} />   
         <Route path={ROUTES.ADMIN} element={<Admin/>} />   
         <Route path={ROUTES.HELP} element={<Help/>} />   
+        <Route path={ROUTES.TERMS} element={<Terms/>} />
 
     </Routes>
 );

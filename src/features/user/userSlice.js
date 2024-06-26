@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
+import showAlert from "../../components/MessageForms/AlertService";
 
 
 export const createUser = createAsyncThunk(
@@ -10,7 +11,7 @@ export const createUser = createAsyncThunk(
       const res = await axios.post(`${BASE_URL}/users`, payload);
       return res.data;
     } catch (err) {
-      alert('Ошибка ввода данных  - [' + err + ']');
+      showAlert('Data entry error');
       console.log(err);
       return thunkAPI.rejectWithValue(err);
     }
@@ -91,7 +92,7 @@ export const loginUser = createAsyncThunk(
       // Возвращение данных профиля
       return profileResponse.data;
     } catch (err) {
-      alert('Ошибка ввода данных  - [' + err + ']');
+      showAlert('Data entry error');
             console.log(err);
       return thunkAPI.rejectWithValue(err);
     }

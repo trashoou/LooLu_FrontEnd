@@ -24,10 +24,10 @@ const Sidebar = () => {
             </nav>
 
             <div className={styles.footer}>
-                <a href="/help" target="_blank" className={styles.link}>
+                <a href="/help" className={styles.link}>
                     Help
                 </a>
-                <a href="/terms" target="_blank" className={styles.link} style={{textDecoration: "underline"}}>
+                <a href="/terms" className={styles.link} style={{textDecoration: "underline"}}>
                     Terms & Conditions
                 </a>
             </div>
