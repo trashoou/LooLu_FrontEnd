@@ -5,6 +5,7 @@ import { ROUTES } from "../../utils/routes";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart, selectCartItems } from "../../features/cart/cartSlice";
 import { selectCurrentUser } from "../../features/user/userSlice";
+import showAlert from "../../components/MessageForms/AlertService";
 
 const Product = (item) => {
   const { id, title, price, imageUrls, description } = item;
@@ -25,12 +26,14 @@ const Product = (item) => {
 
   const addToCart = () => {
     if (!isAuthenticated) {
-      alert("Please log in to add items to your cart.");
+      showAlert("Please log in to add items to your cart.");
+      // alert("Please log in to add items to your cart.");
       return;
     }
 
     if (isInCart) {
-      alert("This product is already in your cart!");
+      showAlert("This product is already in your cart!");
+      // alert("This product is already in your cart!");
       return;
     }
 

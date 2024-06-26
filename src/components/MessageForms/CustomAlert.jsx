@@ -9,7 +9,7 @@ const CustomAlert = ({ message, onClose }) => {
         <div className={styles.overlay}>
             <div className={styles.alertBox}>
                 <p className={styles.alertText}>{message}</p><br></br><br></br>
-                <button className={styles.btn} onClick={onClose}>Close</button>
+                <button className={styles.btn} onClick={onClose}>Ok</button>
             </div>
         </div>
     );
