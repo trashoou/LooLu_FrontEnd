@@ -7,6 +7,10 @@ export const apiSLice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   tagTypes: ["Product"],
   endpoints: (builder) => ({
+    getProductsIdByCart: builder.query({
+      query: (cartId) => `/cart/${cartId}`,
+      providesTags: ["Product"],
+    }),
     getProduct: builder.query({
       query: ({ id }) => `/products/${id}`,
       providesTags: ["Product"],
@@ -18,7 +22,7 @@ export const apiSLice = createApi({
   }),
 });
 
-export const { useGetProductQuery, useGetProductsQuery } = apiSLice;
+export const { useGetProductQuery, useGetProductsQuery, useGetProductsIdByCartQuery } = apiSLice;
 
 const buildUrl = (url, params) => {
   let urlWithParams = url;

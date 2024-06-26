@@ -59,15 +59,16 @@ export const updateProduct = createAsyncThunk(
 export const getProductById = createAsyncThunk(
     'products/getProductById',
     async (id, thunkApi) => {
-        try {
-            const res = await axios(`${BASE_URL}/products/${id}`);
-            return res.data;
-        } catch(err) {
-            console.log(err);
-            return thunkApi.rejectWithValue(err);
-        }
+      try {
+        const res = await axios(`${BASE_URL}/products/${id}`);
+        console.log('getProductById response:', res.data); // Добавьте этот лог
+        return res.data;
+      } catch(err) {
+        console.error('getProductById error:', err); // Добавьте этот лог
+        return thunkApi.rejectWithValue(err);
+      }
     }
-);
+  );
 
 const productsSlice = createSlice({
     name: 'products',
@@ -80,6 +81,10 @@ const productsSlice = createSlice({
         error: null,
     },
     reducers: {
+        updateProductDetails(state, action) {
+            const { productId, details } = action.payload;
+            state.productDetails[productId] = details;
+          },
         clearProducts(state) {
             state.products = [];
           },
@@ -142,21 +147,19 @@ const productsSlice = createSlice({
         });
         builder.addCase(getProductById.pending, (state) => {
             state.isLoading = true;
-            state.productDetails = null;
             state.error = null;
-        });
-        builder.addCase(getProductById.fulfilled, (state, { payload }) => {
-            // Optionally handle the fetched product, e.g., storing in a specific state field
-            state.productDetails = payload;
+          });
+        builder.addCase(getProductById.fulfilled, (state, action) => {
+            state.productDetails = action.payload;
             state.isLoading = false;
-        });
-        builder.addCase(getProductById.rejected, (state, { payload }) => {
+          });
+        builder.addCase(getProductById.rejected, (state, action) => {
             state.isLoading = false;
-            state.error = payload;
-        });
+            state.error = action.error.message;
+          });
     },
 });
 
-export const { clearProducts, setProducts, filterByPrice, getRelatedProducts } = productsSlice.actions;
+export const { clearProducts, setProducts, filterByPrice, getRelatedProducts, updateProductDetails  } = productsSlice.actions;
 
 export default productsSlice.reducer;

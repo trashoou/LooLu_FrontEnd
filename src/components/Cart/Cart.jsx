@@ -1,25 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addItemToCart,
   removeItemFromCart,
 } from "../../features/user/userSlice";
 
+import {
+  updateCartItem
+} from "../../features/cart/cartSlice";
+
 import styles from "../../styles/Cart.module.css";
 import { sumBy } from "../../utils/common";
+import {
+  useGetProductsIdByCartQuery,
+  useGetProductQuery
+} from "../../features/api/apiSlice";
+
+import { getProductById } from "../../features/products/productsSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const { cart } = useSelector(({ user }) => user);
+  const { currentUser } = useSelector(({ user }) => user); // Извлекаем профиль пользователя
 
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+  const [cartId, setCartId] = useState(null);
+  const [id, setId] = useState(null);
+
+  useEffect(() => {
+    if (currentUser && currentUser.cartId) {
+      setCartId(currentUser.cartId);
+    }
+  }, [currentUser]);
+
+  // Получаем список id продуктов из корзины, только если есть cartId
+  const { data: cartIdsData, error: cartIdsError } = useGetProductsIdByCartQuery(cartId);
+
+  useEffect(() => {
+    if (cartIdsData) {
+      const productIds = cartIdsData.map((item) => item.productId);
+      setCartItems(cartIdsData);
+
+      // Получаем данные продуктов по id с использованием getProductById
+      const fetchProducts = async () => {
+        try {
+          const productPromises = productIds.map((productId) =>
+            dispatch(getProductById(productId))
+          );
+
+          const productsData = await Promise.all(productPromises);
+          setProducts(productsData.map(item => item.payload));
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      };
+
+      fetchProducts();
+    }
+  }, [cartIdsData, dispatch]);
 
   const changeQuantity = (item, quantity) => {
-    dispatch(addItemToCart({ ...item, quantity }));
+    // Проверяем структуру данных cartIdsData
+    console.log("cartIdsData:", cartIdsData);
+  
+    // Проверяем структуру item
+    console.log("item:", item);
+  
+    // Находим объект в cartIdsData по productId
+    const cartItemToUpdate = cartIdsData.find(cartItem => cartItem.productId === item.id);
+  
+    if (cartItemToUpdate) {
+      dispatch(updateCartItem({ 
+        cartId: cartId, 
+        itemId: cartItemToUpdate.id, // Используем id товара в корзине из cartIdsData
+        updateCartItem: { quantity } 
+      }));
+    } else {
+      console.log(`CartItem with productId ${item.productId} not found in cartIdsData.`);
+    }
   };
+  
+  
+  
 
-  const removeItem = (id) => {
-    dispatch(removeItemFromCart(id));
+  const removeItem = (productId) => {
+    dispatch(removeItemFromCart(productId));
   };
 
   const handleCheckout = () => {
@@ -27,16 +93,25 @@ const Cart = () => {
     setIsPaymentSuccess(true);
   };
 
+  // Объединяем данные продуктов с количеством из корзины
+  const combinedProducts = products.map(product => {
+    const cartItem = cartItems.find(item => item.productId === product.id);
+    return {
+      ...product,
+      quantity: cartItem ? cartItem.quantity : 0
+    };
+  });
+
   return (
     <section className={styles.cart}>
       <h2 className={styles.title}>Your cart</h2>
 
-      {!cart.length ? (
+      {(!combinedProducts.length && !cartIdsError) ? (
         <div className={styles.empty}>Here is empty</div>
       ) : (
         <>
           <div className={styles.list}>
-            {cart.map((item) => {
+            {combinedProducts.map((item) => {
               const { title, categoryName, imageUrls, price, id, quantity } = item;
 
               return (
@@ -86,7 +161,7 @@ const Cart = () => {
 
                   <div
                     className={styles.close}
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeItem(id)}
                   >
                     <svg className="icon">
                       <use
@@ -103,7 +178,7 @@ const Cart = () => {
             <div className={styles.total}>
               TOTAL PRICE:{" "}
               <span>
-                {sumBy(cart.map(({ quantity, price }) => quantity * price))}$
+                {sumBy(combinedProducts, (item) => item.quantity * item.price).toFixed(2)}$
               </span>
             </div>
 
@@ -124,3 +199,5 @@ const Cart = () => {
 };
 
 export default Cart;
+
+

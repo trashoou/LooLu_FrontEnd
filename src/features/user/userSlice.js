@@ -177,6 +177,7 @@ const userSlice = createSlice({
     toggleFormType: (state, { payload }) => {
       state.formType = payload;
     },
+    
   },
   extraReducers: (builder) => {
     builder.addCase(createUser.fulfilled, addCurrentUser);
