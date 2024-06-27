@@ -7,12 +7,12 @@ const Banner = ({categories}) => {
     const navigate = useNavigate();
     const handleSeeMoreClick = () => {
         if (categories && categories.length > 0) {
-            const foundCategory = categories.find(category => category.name === "Sale");
+            const foundCategory = categories.find(category => category.name === "Sales");
             if (foundCategory) {
                // alert(`Вы будете перенаправлены на категорию "Sale".`);
                 navigate(`/categories/${foundCategory.id}`); // Перенаправление на категорию "Sale" по найденному ID
             } else {
-                alert('Категория "Sale" не найдена.');
+                alert('Категория "Sales" не найдена.');
             }
         };
     };

@@ -15,14 +15,13 @@ const Settings = () => {
           className={`${styles.tab} ${activeTab === "setting1" ? styles.active : ""}`}
           onClick={() => handleTabClick("setting1")}
         >
-      
+          Theme Settings
         </div>
       </div>
 
       <div className={styles.tabContent}>
         {activeTab === "setting1" && (
           <div>
-            <div></div>
             <LightSwitch />
           </div>
         )}
