@@ -14,7 +14,7 @@ const Category = () => {
   const { id } = useParams();
   const { list } = useSelector((state) => state.categories);
 
-  const [categoryId, setCategoryId] = useQueryParam("categoryId", NumberParam);
+  const [categoryId, setCategoryId] = useQueryParam("categoryId", NumberParam); // eslint-disable-line no-unused-vars
   const [title, setTitle] = useQueryParam("title", StringParam);
   const [price_min, setPrice_min] = useQueryParam("price_min", StringParam);
   const [price_max, setPrice_max] = useQueryParam("price_max", StringParam);

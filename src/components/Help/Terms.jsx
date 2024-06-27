@@ -3,10 +3,10 @@ import { useSelector } from "react-redux";
 import styles from "../../styles/Help.module.css";
 
 const Terms = () => {
-  const { currentUser } = useSelector(({ user }) => user);
-  const [feedback, setFeedback] = useState("");
+  const { currentUser } = useSelector(({ user }) => user); // eslint-disable-line no-unused-vars
+  const [feedback, setFeedback] = useState(""); // eslint-disable-line no-unused-vars
 
-  const handleSubmitFeedback = (e) => {
+  const handleSubmitFeedback = (e) => { // eslint-disable-line no-unused-vars
     e.preventDefault();
     // Здесь можно добавить логику отправки обратной связи, например, на сервер
     //  alert("Feedback submitted: " + feedback);

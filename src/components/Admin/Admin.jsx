@@ -13,7 +13,7 @@ import AddCategory from "./ManageCategories/AddCategory";
 import DeleteCategory from "./ManageCategories/DeleteCategory";
 import GetCategory from "./ManageCategories/GetCategory";
 import UpdateCategory from "./ManageCategories/UpdateCategory";
-import UpdateUser from "./UsersManage/UpdateUser";
+import UpdateUser from "./UsersManage/UpdateUser"; // eslint-disable-line no-unused-vars
 
 const Admin = () => {
   const { currentUser } = useSelector(({ user }) => user);

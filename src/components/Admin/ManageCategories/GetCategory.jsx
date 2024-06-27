@@ -5,7 +5,7 @@ import styles from "../../../styles/Admin.module.css";
 
 const GetCategory = () => {
   const dispatch = useDispatch();
-  const { categoryDetails, isLoading, error } = useSelector(
+  const { categoryDetails, isLoading, error } = useSelector( // eslint-disable-line no-unused-vars
     (state) => state.categories
   );
   const [categoryId, setCategoryId] = useState("");

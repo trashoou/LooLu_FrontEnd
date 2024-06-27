@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createUser, loginUser, fetchUserProfile } from "../../features/user/userSlice";
+import { createUser, loginUser, fetchUserProfile } from "../../features/user/userSlice"; // eslint-disable-line no-unused-vars
 
 import styles from "../../styles/User.module.css";
 

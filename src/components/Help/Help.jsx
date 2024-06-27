@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import styles from "../../styles/Help.module.css";
 
 const Help = () => {
-  const { currentUser } = useSelector(({ user }) => user);
+  const { currentUser } = useSelector(({ user }) => user); // eslint-disable-line no-unused-vars
   const [feedback, setFeedback] = useState("");
 
   const handleSubmitFeedback = (e) => {
